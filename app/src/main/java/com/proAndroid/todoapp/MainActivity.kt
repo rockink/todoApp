@@ -1,6 +1,7 @@
 package com.proAndroid.todoapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(this.javaClass.canonicalName, "onCreate called...")
         setContentView(R.layout.activity_main)
         updateUi(todoToDisplayList)
     }
