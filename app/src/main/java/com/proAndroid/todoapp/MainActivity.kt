@@ -18,23 +18,13 @@ data class Todo(
 )
 
 class MainActivity : AppCompatActivity() {
-    private val todoToDisplayList = listOf<Todo>(
-        Todo(
-            title = "ProgrammingTodo",
-            todoListItem = "Expand our todo App",
-            imageResource = R.drawable.programming_image
-        ),
-        Todo(
-            title = "Gaming todo",
-            todoListItem = "Lets play the game",
-            imageResource = R.drawable.programming_image
-        ),
-        Todo(
-            title = "Grocery todo",
-            todoListItem = "Lets do the grocery",
-            imageResource = R.drawable.programming_image
-        )
+    private val todo =  Todo(
+        title = "ProgrammingTodo",
+        todoListItem = "Expand our todo App",
+        imageResource = R.drawable.programming_image
     )
+
+    private val todoToDisplayList = mutableListOf<Todo>(todo)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,14 +34,24 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun updateUi(todoList: List<Todo>) {
-        todoRecyclerView.adapter = TodoListDisplayAdapter(todoList)
+    private fun updateUi(todoList: MutableList<Todo>) {
+        val todoRecyclerAdapter = TodoListDisplayAdapter(todoList)
+        todoRecyclerView.adapter = todoRecyclerAdapter
         todoRecyclerView.layoutManager = LinearLayoutManager(this)
+
+
+        addButton.setOnClickListener {
+            todoRecyclerAdapter.updateListWithItem(
+                todo.copy(
+                    title = todo.title + System.currentTimeMillis()
+                )
+            )
+          }
     }
 }
 
 
-class TodoListDisplayAdapter(private val todoList: List<Todo>) :
+class TodoListDisplayAdapter(private val todoList: MutableList<Todo>) :
     RecyclerView.Adapter<TodoListDisplayAdapter.ViewHolder>() {
     class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         fun updateUi(todo: Todo) {
@@ -69,6 +69,11 @@ class TodoListDisplayAdapter(private val todoList: List<Todo>) :
                 itemView.todoTitle.text = todoTitleOriginalText
             }
         }
+    }
+
+    fun updateListWithItem(todo: Todo) {
+        todoList.add(todo)
+        notifyItemChanged(todoList.size - 1) // last item
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
