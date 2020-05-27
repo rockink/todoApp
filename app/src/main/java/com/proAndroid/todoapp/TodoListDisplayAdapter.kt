@@ -26,9 +26,10 @@ class TodoListDisplayAdapter(private val todoList: MutableList<Todo>) :
         }
     }
 
-    fun updateListWithItem(todo: Todo) {
-        todoList.add(todo)
-        notifyItemChanged(todoList.size - 1) // last item
+    fun updateListWithItem(todo: MutableList<Todo>) {
+        todoList.clear()
+        todoList.addAll(todo)
+        notifyDataSetChanged() // as same as saying update everything again!
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
