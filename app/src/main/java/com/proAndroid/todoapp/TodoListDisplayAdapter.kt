@@ -26,7 +26,7 @@ class TodoListDisplayAdapter(private val todoList: MutableList<Todo>) :
         }
     }
 
-    fun updateListWithItem(todo: MutableList<Todo>) {
+    fun updateListWithItem(todo: List<Todo>) {
         todoList.clear()
         todoList.addAll(todo)
         notifyDataSetChanged() // as same as saying update everything again!
