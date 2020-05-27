@@ -2,6 +2,7 @@ package com.proAndroid.todoapp
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(this.javaClass.canonicalName, "onCreate called...")
         setContentView(R.layout.activity_main)
         updateUi(todoViewModel.todoToDisplayList)
     }
