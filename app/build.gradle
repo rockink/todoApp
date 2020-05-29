@@ -50,4 +50,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
     implementation "androidx.fragment:fragment-ktx:1.2.4"
 
+    // okhttp
+    implementation("com.squareup.okhttp3:okhttp:4.7.2")
+    // json
+    implementation("com.squareup.moshi:moshi:1.9.2")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.9.2")
+
 }
