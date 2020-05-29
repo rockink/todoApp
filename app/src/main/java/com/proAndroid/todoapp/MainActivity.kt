@@ -13,13 +13,13 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
-private val todo =  Todo(
+private val todo = Todo(
     title = "ProgrammingTodo",
     todoListItem = "Expand our todo App",
     imageResource = R.drawable.programming_image
 )
 
- class TodoViewModel: ViewModel() {
+class TodoViewModel : ViewModel() {
 
     private val todoService = RemoteTodoService()
 
@@ -27,8 +27,8 @@ private val todo =  Todo(
     private val _todoLiveData = MutableLiveData<List<Todo>>().also {
         it.postValue(_todoToDisplayList.toList())
     }
-    val todoLiveData : LiveData<List<Todo>> = _todoLiveData
-
+    val todoLiveData: LiveData<List<Todo>> = _todoLiveData
+    
     init {
         viewModelScope.launch(Dispatchers.Default) { //this is a Good practice! This is for demonstration
             // constructor
@@ -70,15 +70,15 @@ class MainActivity : AppCompatActivity() {
         todoRecyclerView.layoutManager = LinearLayoutManager(this)
 
         todoViewModel.todoLiveData
-            .observe(this, Observer {todoList ->
+            .observe(this, Observer { todoList ->
                 todoRecyclerAdapter.updateListWithItem(todoList)
             })
 
         addButton.setOnClickListener {
             todoViewModel.addItem(
-                todo.copy(title =todo.title + System.currentTimeMillis())
+                todo.copy(title = todo.title + System.currentTimeMillis())
             )
-          }
+        }
     }
 }
 
