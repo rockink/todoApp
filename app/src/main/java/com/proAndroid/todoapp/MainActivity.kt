@@ -4,13 +4,13 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.proAndroid.todoapp.network.RemoteTodoService
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
 private val todo =  Todo(
@@ -30,10 +30,10 @@ private val todo =  Todo(
     val todoLiveData : LiveData<List<Todo>> = _todoLiveData
 
     init {
-
-        thread { //this is a BAD practice! This is for demonstration
+        viewModelScope.launch(Dispatchers.Default) { //this is a Good practice! This is for demonstration
             // constructor
             val remoteTodoArray = todoService.getAllTodoList()
+                ?.take(10)
                 ?.map {
                     Todo(
                         it.title,
