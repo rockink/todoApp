@@ -9,7 +9,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.proAndroid.todoapp.network.RemoteTodoService
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.concurrent.thread
 
 private val todo =  Todo(
     title = "ProgrammingTodo",
@@ -17,7 +19,9 @@ private val todo =  Todo(
     imageResource = R.drawable.programming_image
 )
 
-class TodoViewModel: ViewModel() {
+ class TodoViewModel: ViewModel() {
+
+    private val todoService = RemoteTodoService()
 
     private val _todoToDisplayList = mutableListOf<Todo>(todo)
     private val _todoLiveData = MutableLiveData<List<Todo>>().also {
@@ -25,6 +29,22 @@ class TodoViewModel: ViewModel() {
     }
     val todoLiveData : LiveData<List<Todo>> = _todoLiveData
 
+    init {
+
+        thread { //this is a BAD practice! This is for demonstration
+            // constructor
+            val remoteTodoArray = todoService.getAllTodoList()
+                ?.map {
+                    Todo(
+                        it.title,
+                        "${it.completed} description",
+                        R.drawable.programming_image
+                    )
+                }
+            _todoToDisplayList.addAll(remoteTodoArray ?: emptyList())
+            _todoLiveData.postValue(_todoToDisplayList)
+        }
+    }
 
     fun addItem(todo: Todo) {
         _todoToDisplayList.add(todo)
