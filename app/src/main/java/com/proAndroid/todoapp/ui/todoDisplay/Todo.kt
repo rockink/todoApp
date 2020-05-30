@@ -1,4 +1,4 @@
-package com.proAndroid.todoapp
+package com.proAndroid.todoapp.ui.todoDisplay
 
 import androidx.annotation.DrawableRes
 

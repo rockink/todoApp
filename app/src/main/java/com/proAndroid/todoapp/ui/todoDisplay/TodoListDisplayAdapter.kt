@@ -1,9 +1,10 @@
-package com.proAndroid.todoapp
+package com.proAndroid.todoapp.ui.todoDisplay
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.proAndroid.todoapp.R
 import kotlinx.android.synthetic.main.todo_layout.view.*
 
 class TodoListDisplayAdapter(private val todoList: MutableList<Todo>) :
@@ -35,7 +36,9 @@ class TodoListDisplayAdapter(private val todoList: MutableList<Todo>) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.todo_layout, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(
+            view
+        )
     }
 
     override fun getItemCount(): Int {
