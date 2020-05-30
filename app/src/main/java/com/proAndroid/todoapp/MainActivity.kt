@@ -34,33 +34,38 @@ class TodoViewModel : ViewModel() {
 
     init {
         backgroundScope.launch { //this is a Good practice! This is for demonstration
-            // constructor
-            val userListAsyc = async {
-                val userList = userService.getAllUsers()
-                    ?.map { Pair(it.id, it) }
-                val userMap = hashMapOf<Int, User>()
-                userMap.putAll(userList ?: emptyList())
-                return@async userMap
-            }
-
-            // they run in parallel
-            val remoteTodoArrayAsync = async { todoService.getAllTodoList() }
-
-            val userMap = userListAsyc.await()
-            val remoteTodoArray = remoteTodoArrayAsync.await()
-
-            val todoListTodDisplay = remoteTodoArray
-                ?.take(10)
-                ?.map {
-                    Todo(
-                        "${it.completed} description",
-                        "${it.title} by ${userMap[it.userId]?.name?:""}",
-                        R.drawable.programming_image
-                    )
-                }
-            _todoToDisplayList.addAll(todoListTodDisplay ?: emptyList())
-            _todoLiveData.postValue(_todoToDisplayList)
+            updateDataFromRemoteCalls()
         }
+    }
+
+    // can only run from coroutines
+    private suspend fun updateDataFromRemoteCalls() {
+        // constructor
+        val userListAsyc = backgroundScope.async {
+            val userList = userService.getAllUsers()
+                ?.map { Pair(it.id, it) }
+            val userMap = hashMapOf<Int, User>()
+            userMap.putAll(userList ?: emptyList())
+            return@async userMap
+        }
+
+        // they run in parallel
+        val remoteTodoArrayAsync = backgroundScope.async { todoService.getAllTodoList() }
+
+        val userMap = userListAsyc.await()
+        val remoteTodoArray = remoteTodoArrayAsync.await()
+
+        val todoListTodDisplay = remoteTodoArray
+            ?.take(10)
+            ?.map {
+                Todo(
+                    "${it.completed} description",
+                    "${it.title} by ${userMap[it.userId]?.name?:""}",
+                    R.drawable.programming_image
+                )
+            }
+        _todoToDisplayList.addAll(todoListTodDisplay ?: emptyList())
+        _todoLiveData.postValue(_todoToDisplayList)
     }
 
     override fun onCleared() {
