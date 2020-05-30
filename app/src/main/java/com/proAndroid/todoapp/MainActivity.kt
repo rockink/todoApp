@@ -19,10 +19,20 @@ private val todo = Todo(
     imageResource = R.drawable.programming_image
 )
 
-class TodoViewModel : ViewModel() {
 
-    private val todoService = RemoteTodoService()
-    private val userService = UserService()
+class TodoViewModelFactory : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(TodoViewModel::class.java)) {
+            return TodoViewModel(RemoteTodoService(), UserService()) as T
+        }
+        throw RuntimeException("${modelClass.canonicalName} is not assignable from " +
+                "${TodoViewModel::class.java.canonicalName}")
+    }
+
+}
+
+
+class TodoViewModel(private val todoService: RemoteTodoService, private val userService: UserService) : ViewModel() {
 
     private val _todoToDisplayList = mutableListOf<Todo>(todo)
     private val _todoLiveData = MutableLiveData<List<Todo>>().also {
@@ -83,7 +93,7 @@ class TodoViewModel : ViewModel() {
 
 class MainActivity : AppCompatActivity() {
 
-    private val todoViewModel by viewModels<TodoViewModel>()
+    private val todoViewModel by viewModels<TodoViewModel> { TodoViewModelFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
