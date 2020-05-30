@@ -8,9 +8,7 @@ import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.proAndroid.todoapp.network.RemoteTodoService
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.concurrent.thread
 
 private val todo = Todo(
@@ -28,22 +26,30 @@ class TodoViewModel : ViewModel() {
         it.postValue(_todoToDisplayList.toList())
     }
     val todoLiveData: LiveData<List<Todo>> = _todoLiveData
-    
+
+    private val backgroundScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+
     init {
-        viewModelScope.launch(Dispatchers.Default) { //this is a Good practice! This is for demonstration
+        backgroundScope.launch { //this is a Good practice! This is for demonstration
             // constructor
             val remoteTodoArray = todoService.getAllTodoList()
                 ?.take(10)
                 ?.map {
                     Todo(
-                        it.title,
                         "${it.completed} description",
+                        it.title,
                         R.drawable.programming_image
                     )
                 }
             _todoToDisplayList.addAll(remoteTodoArray ?: emptyList())
             _todoLiveData.postValue(_todoToDisplayList)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        // free up background resource
+        backgroundScope.cancel()
     }
 
     fun addItem(todo: Todo) {
