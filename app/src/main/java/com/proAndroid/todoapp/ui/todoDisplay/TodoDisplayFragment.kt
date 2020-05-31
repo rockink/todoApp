@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.proAndroid.todoapp.R
 import kotlinx.android.synthetic.main.activity_main.*
@@ -37,9 +38,12 @@ class TodoDisplayFragment : Fragment() {
             })
 
         addButton.setOnClickListener {
-            todoViewModel.addItem(
-                todo.copy(title = todo.title + System.currentTimeMillis())
-            )
+            // go to the todoAddFragment 
+            findNavController()
+                .navigate(R.id.action_todoDisplayFragment_to_todoAddFragment)
+//            todoViewModel.addItem(
+//                todo.copy(title = todo.title + System.currentTimeMillis())
+//            )
         }
     }
 

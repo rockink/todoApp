@@ -9,5 +9,16 @@
         android:id="@+id/todoDisplayFragment"
         android:name="com.proAndroid.todoapp.ui.todoDisplay.TodoDisplayFragment"
         android:label="main_layout"
-        tools:layout="@layout/main_layout" />
+        tools:layout="@layout/main_layout" >
+        <action
+            android:id="@+id/action_todoDisplayFragment_to_todoAddFragment"
+            app:destination="@id/todoAddFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/todoAddFragment"
+        android:name="com.proAndroid.todoapp.ui.todoAdd.TodoAddFragment"
+        android:label="fragment_todo_add"
+        tools:layout="@layout/fragment_todo_add" />
 </navigation>
