@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -15,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 
 class TodoDisplayFragment : Fragment() {
-    private val todoViewModel by viewModels<TodoViewModel> { TodoViewModelFactory() }
+    private val todoViewModel by activityViewModels<TodoViewModel> { TodoViewModelFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,12 +39,9 @@ class TodoDisplayFragment : Fragment() {
             })
 
         addButton.setOnClickListener {
-            // go to the todoAddFragment 
+            // go to the todoAddFragment
             findNavController()
                 .navigate(R.id.action_todoDisplayFragment_to_todoAddFragment)
-//            todoViewModel.addItem(
-//                todo.copy(title = todo.title + System.currentTimeMillis())
-//            )
         }
     }
 

@@ -31,7 +31,8 @@ class TodoViewModel(private val todoService: RemoteTodoService, private val user
 
     init {
         backgroundScope.launch { //this is a Good practice! This is for demonstration
-            updateDataFromRemoteCalls()
+            // no calls for a while, so we have less amount of todos for test
+            // updateDataFromRemoteCalls()
         }
     }
 
