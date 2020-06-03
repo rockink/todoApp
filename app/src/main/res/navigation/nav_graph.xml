@@ -20,5 +20,9 @@
         android:id="@+id/todoAddFragment"
         android:name="com.proAndroid.todoapp.ui.todoAdd.TodoAddFragment"
         android:label="fragment_todo_add"
-        tools:layout="@layout/fragment_todo_add" />
+        tools:layout="@layout/fragment_todo_add" >
+        <action
+            android:id="@+id/action_todoAddFragment_to_todoDisplayFragment"
+            app:destination="@id/todoDisplayFragment" />
+    </fragment>
 </navigation>
