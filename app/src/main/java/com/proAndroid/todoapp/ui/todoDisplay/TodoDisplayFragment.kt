@@ -5,12 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.proAndroid.todoapp.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
@@ -29,7 +28,7 @@ class TodoDisplayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val todoRecyclerAdapter =
-            TodoListDisplayAdapter(mutableListOf())
+            TodoListDisplayAdapter(mutableListOf(), Glide.with(this))
         view.todoRecyclerView.adapter = todoRecyclerAdapter
         view.todoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 

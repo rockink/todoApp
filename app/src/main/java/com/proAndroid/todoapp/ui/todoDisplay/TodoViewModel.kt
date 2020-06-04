@@ -13,7 +13,8 @@ import kotlinx.coroutines.*
 val todo = Todo(
     title = "ProgrammingTodo",
     todoListItem = "Expand our todo App",
-    imageResource = R.drawable.programming_image
+    imageResource = R.drawable.programming_image,
+    imageResourceOnline = RemoteTodoService.getTodoImages()
 )
 
 
@@ -32,7 +33,7 @@ class TodoViewModel(private val todoService: RemoteTodoService, private val user
     init {
         backgroundScope.launch { //this is a Good practice! This is for demonstration
             // no calls for a while, so we have less amount of todos for test
-            // updateDataFromRemoteCalls()
+             updateDataFromRemoteCalls()
         }
     }
 
@@ -59,7 +60,8 @@ class TodoViewModel(private val todoService: RemoteTodoService, private val user
                 Todo(
                     "${it.completed} description",
                     "${it.title} by ${userMap[it.userId]?.name ?: ""}",
-                    R.drawable.programming_image
+                    R.drawable.programming_image,
+                    RemoteTodoService.getTodoImages()
                 )
             }
         _todoToDisplayList.addAll(todoListTodDisplay ?: emptyList())

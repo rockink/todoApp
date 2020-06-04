@@ -44,4 +44,16 @@ class RemoteTodoService {
         // convert json string to json
         return jsonListAdapter.fromJson(responseString)
     }
+
+    companion object {
+        fun getTodoImages(): List<String> {
+            val urlTemplate = "https://picsum.photos/id/%d/200/300" // d as in integer, decimal
+            val ids = listOf(1001, 1002, 1003, 1004)
+
+            return ids
+                .shuffled()
+                .take(2)
+                .map { urlTemplate.format(it) }
+        }
+    }
 }

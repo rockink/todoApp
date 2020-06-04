@@ -5,5 +5,6 @@ import androidx.annotation.DrawableRes
 data class Todo(
     val title: String,
     val todoListItem: String,
-    @DrawableRes val imageResource : Int
+    @DrawableRes val imageResource : Int,
+    val imageResourceOnline : List<String>
 )
