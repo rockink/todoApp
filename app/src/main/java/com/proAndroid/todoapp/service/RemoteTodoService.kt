@@ -1,6 +1,9 @@
 package com.proAndroid.todoapp.service
 
 import android.util.Log
+import com.proAndroid.todoapp.R
+import com.proAndroid.todoapp.ui.models.Todo
+import com.proAndroid.todoapp.ui.todoDisplay.todo
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
@@ -26,14 +29,35 @@ data class JsonPlaceHolderTodo(
     ]
  */
 
-class RemoteTodoService {
+class RemoteTodoService(private val userService: UserService) {
+    private val _todoToDisplayList = mutableListOf<Todo>()
+
     private val okHttpClient = OkHttpClient()
     private val url = "https://jsonplaceholder.typicode.com/todos"
 
     private val moshi = Moshi.Builder().build()
     private val jsonListAdapter = moshi.adapter<Array<JsonPlaceHolderTodo>>(arrayOf<JsonPlaceHolderTodo>()::class.java)
 
-    fun getAllTodoList(): Array<JsonPlaceHolderTodo>? {
+    fun getAllTodoList(): List<Todo> {
+        if (_todoToDisplayList.isEmpty()) {
+            _todoToDisplayList.add(todo)
+            val remoteTodos = getRemoteTodos()
+            val mappedLocalTodo = remoteTodos
+                ?.map {
+                    Todo(
+                        title = "${it.completed} description",
+                        todoListItem =  "${it.title} by ${userService.getUser(it.userId)?.name ?: ""}",
+                        imageResource = R.drawable.programming_image,
+                        imageResourceOnline = getTodoImages(),
+                        id = it.id
+                    )
+                }
+            _todoToDisplayList.addAll(mappedLocalTodo?: emptyList())
+        }
+        return _todoToDisplayList.toList()
+    }
+
+    private fun getRemoteTodos(): List<JsonPlaceHolderTodo>? {
         val request = Request.Builder()
             .url(url)
             .build()
@@ -43,6 +67,15 @@ class RemoteTodoService {
         if (responseString == null) return null
         // convert json string to json
         return jsonListAdapter.fromJson(responseString)
+            ?.take(5)
+    }
+
+    /**
+     * When you add [todo], the id will be generated. Therefore, even if you pass any id,
+     * that id will be overridden by the remoteTodoService
+     */
+    fun addTodo(todo: Todo) {
+        _todoToDisplayList.add(todo.copy(id = _todoToDisplayList.size))
     }
 
     companion object {

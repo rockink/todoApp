@@ -6,11 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.proAndroid.todoapp.R
 import com.proAndroid.todoapp.service.RemoteTodoService
-import com.proAndroid.todoapp.ui.todoDisplay.Todo
+import com.proAndroid.todoapp.ui.models.Todo
 import com.proAndroid.todoapp.ui.todoDisplay.TodoViewModel
 import com.proAndroid.todoapp.ui.todoDisplay.TodoViewModelFactory
 import kotlinx.android.synthetic.main.fragment_todo_add.view.*
@@ -35,9 +34,10 @@ class TodoAddFragment : Fragment() {
                 title = title,
                 todoListItem = todoItem,
                 imageResource = R.drawable.programming_image,
-                imageResourceOnline = RemoteTodoService.getTodoImages()
+                imageResourceOnline = RemoteTodoService.getTodoImages(),
+                id = 1
             )
-            todoViewModel.addItem(todoToAdd)
+            todoViewModel.addTodo(todoToAdd)
 
             // navigate back to main screen
             findNavController().navigate(R.id.action_todoAddFragment_to_todoDisplayFragment)

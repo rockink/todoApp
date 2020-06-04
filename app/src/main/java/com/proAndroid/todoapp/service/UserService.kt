@@ -46,4 +46,8 @@ class UserService {
         // convert json string to json
         return jsonListAdapter.fromJson(responseString)
     }
+
+    fun getUser(userId: Int): User? {
+        return getAllUsers()?.first { it.id == userId }
+    }
 }

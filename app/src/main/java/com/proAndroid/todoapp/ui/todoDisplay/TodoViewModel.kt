@@ -6,25 +6,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.proAndroid.todoapp.R
 import com.proAndroid.todoapp.service.RemoteTodoService
-import com.proAndroid.todoapp.service.User
 import com.proAndroid.todoapp.service.UserService
+import com.proAndroid.todoapp.ui.models.Todo
 import kotlinx.coroutines.*
 
 val todo = Todo(
     title = "ProgrammingTodo",
     todoListItem = "Expand our todo App",
     imageResource = R.drawable.programming_image,
-    imageResourceOnline = RemoteTodoService.getTodoImages()
+    imageResourceOnline = RemoteTodoService.getTodoImages(),
+    id = 1
 )
 
 
-class TodoViewModel(private val todoService: RemoteTodoService, private val userService: UserService) : ViewModel() {
+class TodoViewModel(private val todoService: RemoteTodoService) : ViewModel() {
 
-    private val _todoToDisplayList = mutableListOf<Todo>(todo)
     private val _todoLiveData = MutableLiveData<List<Todo>>()
-        .also {
-        it.postValue(_todoToDisplayList.toList())
-    }
     val todoLiveData: LiveData<List<Todo>> = _todoLiveData
 
     private val backgroundScope =
@@ -33,39 +30,13 @@ class TodoViewModel(private val todoService: RemoteTodoService, private val user
     init {
         backgroundScope.launch { //this is a Good practice! This is for demonstration
             // no calls for a while, so we have less amount of todos for test
-             updateDataFromRemoteCalls()
+            updateDataFromRemoteCalls()
         }
     }
 
     // can only run from coroutines
     private suspend fun updateDataFromRemoteCalls() {
-        // constructor
-        val userListAsyc = backgroundScope.async {
-            val userList = userService.getAllUsers()
-                ?.map { Pair(it.id, it) }
-            val userMap = hashMapOf<Int, User>()
-            userMap.putAll(userList ?: emptyList())
-            return@async userMap
-        }
-
-        // they run in parallel
-        val remoteTodoArrayAsync = backgroundScope.async { todoService.getAllTodoList() }
-
-        val userMap = userListAsyc.await()
-        val remoteTodoArray = remoteTodoArrayAsync.await()
-
-        val todoListTodDisplay = remoteTodoArray
-            ?.take(10)
-            ?.map {
-                Todo(
-                    "${it.completed} description",
-                    "${it.title} by ${userMap[it.userId]?.name ?: ""}",
-                    R.drawable.programming_image,
-                    RemoteTodoService.getTodoImages()
-                )
-            }
-        _todoToDisplayList.addAll(todoListTodDisplay ?: emptyList())
-        _todoLiveData.postValue(_todoToDisplayList)
+        _todoLiveData.postValue(todoService.getAllTodoList())
     }
 
     override fun onCleared() {
@@ -74,9 +45,9 @@ class TodoViewModel(private val todoService: RemoteTodoService, private val user
         backgroundScope.cancel()
     }
 
-    fun addItem(todo: Todo) {
-        _todoToDisplayList.add(todo)
-        _todoLiveData.postValue(_todoToDisplayList.toList()) // make a copy of our list
+    fun addTodo(todo: Todo) {
+        todoService.addTodo(todo)
+        _todoLiveData.postValue(todoService.getAllTodoList())
     }
 
 }
@@ -86,8 +57,7 @@ class TodoViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TodoViewModel::class.java)) {
             return TodoViewModel(
-                RemoteTodoService(),
-                UserService()
+                RemoteTodoService(UserService())
             ) as T
         }
         throw RuntimeException("${modelClass.canonicalName} is not assignable from " +

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.proAndroid.todoapp.R
+import com.proAndroid.todoapp.ui.models.Todo
 import kotlinx.android.synthetic.main.todo_layout.view.*
 
 class TodoListDisplayAdapter(
