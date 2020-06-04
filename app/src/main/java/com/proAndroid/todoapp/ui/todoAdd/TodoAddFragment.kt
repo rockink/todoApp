@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.proAndroid.todoapp.R
+import com.proAndroid.todoapp.service.RemoteTodoService
 import com.proAndroid.todoapp.ui.todoDisplay.Todo
 import com.proAndroid.todoapp.ui.todoDisplay.TodoViewModel
 import com.proAndroid.todoapp.ui.todoDisplay.TodoViewModelFactory
@@ -33,7 +34,8 @@ class TodoAddFragment : Fragment() {
             val todoToAdd = Todo(
                 title = title,
                 todoListItem = todoItem,
-                imageResource = R.drawable.programming_image
+                imageResource = R.drawable.programming_image,
+                imageResourceOnline = RemoteTodoService.getTodoImages()
             )
             todoViewModel.addItem(todoToAdd)
 
