@@ -28,7 +28,7 @@ class TodoDisplayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val todoRecyclerAdapter =
-            TodoListDisplayAdapter(mutableListOf(), Glide.with(this))
+            TodoListDisplayAdapter(mutableListOf(), Glide.with(this), findNavController())
         view.todoRecyclerView.adapter = todoRecyclerAdapter
         view.todoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 

@@ -3,18 +3,21 @@ package com.proAndroid.todoapp.ui.todoDisplay
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.proAndroid.todoapp.R
+import com.proAndroid.todoapp.ui.editTodo.EditTodoFragment
 import com.proAndroid.todoapp.ui.models.Todo
 import kotlinx.android.synthetic.main.todo_layout.view.*
 
 class TodoListDisplayAdapter(
     private val todoList: MutableList<Todo>,
-    private val glide: RequestManager
+    private val glide: RequestManager,
+    private val navController: NavController
 ) :
     RecyclerView.Adapter<TodoListDisplayAdapter.ViewHolder>() {
-    class ViewHolder(mView: View, private val glide: RequestManager) : RecyclerView.ViewHolder(mView) {
+    class ViewHolder(mView: View, private val glide: RequestManager, private val navController: NavController) : RecyclerView.ViewHolder(mView) {
         fun updateUi(todo: Todo) {
             itemView.todoTitle.text = todo.title
             itemView.todoListItem.text = todo.todoListItem
@@ -46,7 +49,10 @@ class TodoListDisplayAdapter(
             val todoTitleOriginalText = itemView.todoTitle.text
 
             itemView.todoTitle.setOnClickListener {
-                itemView.todoTitle.text = "TodoTitle clicked!!"
+                navController.navigate(
+                    R.id.action_todoDisplayFragment_to_editTodoFragment,
+                    EditTodoFragment.bundalize(todo.id)
+                )
             }
 
             itemView.todoImage.setOnClickListener {
@@ -64,7 +70,7 @@ class TodoListDisplayAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.todo_layout, parent, false)
-        return ViewHolder(view, glide)
+        return ViewHolder(view, glide, navController)
     }
 
     override fun getItemCount(): Int {

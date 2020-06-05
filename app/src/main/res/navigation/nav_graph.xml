@@ -15,6 +15,9 @@
             app:destination="@id/todoAddFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
+        <action
+            android:id="@+id/action_todoDisplayFragment_to_editTodoFragment"
+            app:destination="@id/editTodoFragment" />
     </fragment>
     <fragment
         android:id="@+id/todoAddFragment"
@@ -23,6 +26,14 @@
         tools:layout="@layout/fragment_todo_add" >
         <action
             android:id="@+id/action_todoAddFragment_to_todoDisplayFragment"
+            app:destination="@id/todoDisplayFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editTodoFragment"
+        android:name="com.proAndroid.todoapp.ui.editTodo.EditTodoFragment"
+        android:label="EditTodoFragment" >
+        <action
+            android:id="@+id/action_editTodoFragment_to_todoDisplayFragment"
             app:destination="@id/todoDisplayFragment" />
     </fragment>
 </navigation>

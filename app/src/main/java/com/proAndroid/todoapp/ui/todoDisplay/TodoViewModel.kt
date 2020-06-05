@@ -1,9 +1,6 @@
 package com.proAndroid.todoapp.ui.todoDisplay
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.proAndroid.todoapp.R
 import com.proAndroid.todoapp.service.RemoteTodoService
 import com.proAndroid.todoapp.service.UserService
@@ -21,22 +18,15 @@ val todo = Todo(
 
 class TodoViewModel(private val todoService: RemoteTodoService) : ViewModel() {
 
-    private val _todoLiveData = MutableLiveData<List<Todo>>()
-    val todoLiveData: LiveData<List<Todo>> = _todoLiveData
-
+    val todoLiveData = Transformations.map(todoService.getAllTodoListLiveData()) {it}
     private val backgroundScope =
         CoroutineScope(Dispatchers.Default + SupervisorJob())
 
     init {
         backgroundScope.launch { //this is a Good practice! This is for demonstration
             // no calls for a while, so we have less amount of todos for test
-            updateDataFromRemoteCalls()
+            todoService.getAllTodoList()
         }
-    }
-
-    // can only run from coroutines
-    private suspend fun updateDataFromRemoteCalls() {
-        _todoLiveData.postValue(todoService.getAllTodoList())
     }
 
     override fun onCleared() {
@@ -47,7 +37,6 @@ class TodoViewModel(private val todoService: RemoteTodoService) : ViewModel() {
 
     fun addTodo(todo: Todo) {
         todoService.addTodo(todo)
-        _todoLiveData.postValue(todoService.getAllTodoList())
     }
 
 }
@@ -57,7 +46,7 @@ class TodoViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TodoViewModel::class.java)) {
             return TodoViewModel(
-                RemoteTodoService(UserService())
+                RemoteTodoService.getInstance()
             ) as T
         }
         throw RuntimeException("${modelClass.canonicalName} is not assignable from " +
