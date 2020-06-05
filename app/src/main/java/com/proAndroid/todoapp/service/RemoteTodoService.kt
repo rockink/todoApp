@@ -1,6 +1,8 @@
 package com.proAndroid.todoapp.service
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.proAndroid.todoapp.R
 import com.proAndroid.todoapp.ui.models.Todo
 import com.proAndroid.todoapp.ui.todoDisplay.todo
@@ -29,8 +31,10 @@ data class JsonPlaceHolderTodo(
     ]
  */
 
-class RemoteTodoService(private val userService: UserService) {
+class RemoteTodoService private constructor(private val userService: UserService) {
+
     private val _todoToDisplayList = mutableListOf<Todo>()
+    private val _todoDisplayListLiveData = MutableLiveData<List<Todo>>()
 
     private val okHttpClient = OkHttpClient()
     private val url = "https://jsonplaceholder.typicode.com/todos"
@@ -53,6 +57,7 @@ class RemoteTodoService(private val userService: UserService) {
                     )
                 }
             _todoToDisplayList.addAll(mappedLocalTodo?: emptyList())
+            _todoDisplayListLiveData.postValue(_todoToDisplayList)
         }
         return _todoToDisplayList.toList()
     }
@@ -76,6 +81,21 @@ class RemoteTodoService(private val userService: UserService) {
      */
     fun addTodo(todo: Todo) {
         _todoToDisplayList.add(todo.copy(id = _todoToDisplayList.size))
+        _todoDisplayListLiveData.postValue(_todoToDisplayList)
+    }
+
+    fun getTodoById(todoId: Int): Todo {
+        return _todoToDisplayList.first { it.id == todoId }
+    }
+
+    fun updateTodo(todoToUpdate: Todo) {
+        val index = _todoToDisplayList.indexOfFirst { it.id == todoToUpdate.id }
+        _todoToDisplayList[index] = todoToUpdate
+        _todoDisplayListLiveData.postValue(_todoToDisplayList)
+    }
+
+    fun getAllTodoListLiveData(): LiveData<List<Todo>> {
+        return _todoDisplayListLiveData
     }
 
     companion object {
@@ -88,5 +108,14 @@ class RemoteTodoService(private val userService: UserService) {
                 .take(2)
                 .map { urlTemplate.format(it) }
         }
+
+        private var INSTANCE : RemoteTodoService? = null
+
+        fun getInstance() : RemoteTodoService {
+            if (INSTANCE == null)
+                INSTANCE = RemoteTodoService(UserService())
+            return INSTANCE!!
+        }
+
     }
 }
