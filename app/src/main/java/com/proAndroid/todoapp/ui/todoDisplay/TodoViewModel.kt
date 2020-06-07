@@ -2,6 +2,7 @@ package com.proAndroid.todoapp.ui.todoDisplay
 
 import androidx.lifecycle.*
 import com.proAndroid.todoapp.R
+import com.proAndroid.todoapp.db.TodoDao
 import com.proAndroid.todoapp.service.RemoteTodoService
 import com.proAndroid.todoapp.service.UserService
 import com.proAndroid.todoapp.ui.models.Todo
@@ -36,17 +37,17 @@ class TodoViewModel(private val todoService: RemoteTodoService) : ViewModel() {
     }
 
     fun addTodo(todo: Todo) {
-        todoService.addTodo(todo)
+        return todoService.addTodo(todo)
     }
 
 }
 
 
-class TodoViewModelFactory : ViewModelProvider.Factory {
+class TodoViewModelFactory(val todoDao: TodoDao) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TodoViewModel::class.java)) {
             return TodoViewModel(
-                RemoteTodoService.getInstance()
+                RemoteTodoService.getInstance(todoDao)
             ) as T
         }
         throw RuntimeException("${modelClass.canonicalName} is not assignable from " +
