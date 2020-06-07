@@ -6,17 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.proAndroid.todoapp.R
+import com.proAndroid.todoapp.TodoApplication
 import com.proAndroid.todoapp.service.RemoteTodoService
 import com.proAndroid.todoapp.ui.models.Todo
 import com.proAndroid.todoapp.ui.todoDisplay.TodoViewModel
 import com.proAndroid.todoapp.ui.todoDisplay.TodoViewModelFactory
 import kotlinx.android.synthetic.main.fragment_todo_add.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TodoAddFragment : Fragment() {
 
-    private val todoViewModel by activityViewModels<TodoViewModel> { TodoViewModelFactory() }
+    private val todoViewModel by activityViewModels<TodoViewModel> { TodoViewModelFactory(
+        (requireActivity().application as TodoApplication).db.todoDao()
+    ) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,10 +43,12 @@ class TodoAddFragment : Fragment() {
                 imageResourceOnline = RemoteTodoService.getTodoImages(),
                 id = 1
             )
-            todoViewModel.addTodo(todoToAdd)
+            lifecycleScope.launch(Dispatchers.Default) {// background
+                todoViewModel.addTodo(todoToAdd)
+                // navigate back to main screen
+                findNavController().navigate(R.id.action_todoAddFragment_to_todoDisplayFragment)
+            }
 
-            // navigate back to main screen
-            findNavController().navigate(R.id.action_todoAddFragment_to_todoDisplayFragment)
         }
     }
 

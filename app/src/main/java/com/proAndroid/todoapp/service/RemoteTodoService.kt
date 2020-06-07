@@ -3,7 +3,9 @@ package com.proAndroid.todoapp.service
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.proAndroid.todoapp.R
+import com.proAndroid.todoapp.db.TodoDao
 import com.proAndroid.todoapp.ui.models.Todo
 import com.proAndroid.todoapp.ui.todoDisplay.todo
 import com.squareup.moshi.JsonClass
@@ -31,10 +33,11 @@ data class JsonPlaceHolderTodo(
     ]
  */
 
-class RemoteTodoService private constructor(private val userService: UserService) {
+class RemoteTodoService private constructor(private val userService: UserService, private val todoDao: TodoDao) {
 
-    private val _todoToDisplayList = mutableListOf<Todo>()
-    private val _todoDisplayListLiveData = MutableLiveData<List<Todo>>()
+    private val _todoDisplayListLiveData = Transformations.map(todoDao.getAllTodoLiveData()) {
+        it.map { it.mapToTodo() }
+    }
 
     private val okHttpClient = OkHttpClient()
     private val url = "https://jsonplaceholder.typicode.com/todos"
@@ -42,9 +45,9 @@ class RemoteTodoService private constructor(private val userService: UserService
     private val moshi = Moshi.Builder().build()
     private val jsonListAdapter = moshi.adapter<Array<JsonPlaceHolderTodo>>(arrayOf<JsonPlaceHolderTodo>()::class.java)
 
-    fun getAllTodoList(): List<Todo> {
-        if (_todoToDisplayList.isEmpty()) {
-            _todoToDisplayList.add(todo)
+    fun getAllTodoList(): LiveData<List<Todo>> {
+        if (todoDao.todoCount() <= 5) {
+            todoDao.insert(todo.mapToDbTodo().copy(id = null)) //because insert should be null
             val remoteTodos = getRemoteTodos()
             val mappedLocalTodo = remoteTodos
                 ?.map {
@@ -55,11 +58,10 @@ class RemoteTodoService private constructor(private val userService: UserService
                         imageResourceOnline = getTodoImages(),
                         id = it.id
                     )
-                }
-            _todoToDisplayList.addAll(mappedLocalTodo?: emptyList())
-            _todoDisplayListLiveData.postValue(_todoToDisplayList)
+                }?.map { it.mapToDbTodo().copy(id = null) }
+            todoDao.insertAll(mappedLocalTodo?: emptyList())
         }
-        return _todoToDisplayList.toList()
+        return _todoDisplayListLiveData
     }
 
     private fun getRemoteTodos(): List<JsonPlaceHolderTodo>? {
@@ -80,18 +82,17 @@ class RemoteTodoService private constructor(private val userService: UserService
      * that id will be overridden by the remoteTodoService
      */
     fun addTodo(todo: Todo) {
-        _todoToDisplayList.add(todo.copy(id = _todoToDisplayList.size))
-        _todoDisplayListLiveData.postValue(_todoToDisplayList)
+        todoDao.insert(todo.mapToDbTodo().copy(id = null)) //now automatically liveDAta is updated
     }
 
-    fun getTodoById(todoId: Int): Todo {
-        return _todoToDisplayList.first { it.id == todoId }
+    fun getTodoById(todoId: Int): LiveData<Todo> {
+        return Transformations.map(todoDao.getTodoById(todoId)){
+            it.mapToTodo()
+        }
     }
 
     fun updateTodo(todoToUpdate: Todo) {
-        val index = _todoToDisplayList.indexOfFirst { it.id == todoToUpdate.id }
-        _todoToDisplayList[index] = todoToUpdate
-        _todoDisplayListLiveData.postValue(_todoToDisplayList)
+        todoDao.update(todoToUpdate.mapToDbTodo())
     }
 
     fun getAllTodoListLiveData(): LiveData<List<Todo>> {
@@ -111,9 +112,9 @@ class RemoteTodoService private constructor(private val userService: UserService
 
         private var INSTANCE : RemoteTodoService? = null
 
-        fun getInstance() : RemoteTodoService {
+        fun getInstance(todoDao: TodoDao) : RemoteTodoService {
             if (INSTANCE == null)
-                INSTANCE = RemoteTodoService(UserService())
+                INSTANCE = RemoteTodoService(UserService(), todoDao)
             return INSTANCE!!
         }
 

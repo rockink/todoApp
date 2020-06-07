@@ -7,9 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.proAndroid.todoapp.R
+import com.proAndroid.todoapp.TodoApplication
 import kotlinx.android.synthetic.main.fragment_todo_add.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class EditTodoFragment : Fragment() {
 
@@ -22,7 +26,9 @@ class EditTodoFragment : Fragment() {
         fun deBundalize(bundle: Bundle) = bundle.getInt(ID)
     }
 
-    private val editViewModel by viewModels<EditTodoViewModel> { EditTodoViewModelFactory() }
+    private val editViewModel by viewModels<EditTodoViewModel> { EditTodoViewModelFactory(
+        (requireActivity().application as TodoApplication).db.todoDao()
+    ) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,8 +51,10 @@ class EditTodoFragment : Fragment() {
                         todoListItem = todoItem
                     )
 
-                    editViewModel.updateTodo(todoToUpdate)
-                    findNavController().navigate(R.id.action_editTodoFragment_to_todoDisplayFragment)
+                    lifecycleScope.launch(Dispatchers.Default) {
+                        editViewModel.updateTodo(todoToUpdate)
+                        findNavController().navigate(R.id.action_editTodoFragment_to_todoDisplayFragment)
+                    }
                 }
 
             })
