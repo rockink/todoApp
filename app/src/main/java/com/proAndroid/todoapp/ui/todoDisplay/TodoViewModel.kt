@@ -7,6 +7,7 @@ import com.proAndroid.todoapp.service.RemoteTodoService
 import com.proAndroid.todoapp.service.UserService
 import com.proAndroid.todoapp.ui.models.Todo
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
 val todo = Todo(
     title = "ProgrammingTodo",
@@ -43,12 +44,10 @@ class TodoViewModel(private val todoService: RemoteTodoService) : ViewModel() {
 }
 
 
-class TodoViewModelFactory(val todoDao: TodoDao) : ViewModelProvider.Factory {
+class TodoViewModelFactory @Inject constructor(private val remoteTodoService: RemoteTodoService) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TodoViewModel::class.java)) {
-            return TodoViewModel(
-                RemoteTodoService.getInstance(todoDao)
-            ) as T
+            return TodoViewModel(remoteTodoService) as T
         }
         throw RuntimeException("${modelClass.canonicalName} is not assignable from " +
                 "${TodoViewModel::class.java.canonicalName}")

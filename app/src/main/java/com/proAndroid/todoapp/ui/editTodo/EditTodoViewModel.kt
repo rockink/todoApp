@@ -7,10 +7,11 @@ import com.proAndroid.todoapp.service.UserService
 import com.proAndroid.todoapp.ui.models.Todo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class EditTodoViewModel(private val todoService: RemoteTodoService) : ViewModel() {
+class EditTodoViewModel(private val todoService: RemoteTodoService, private val todoId: Int) : ViewModel() {
 
-    fun getTodoById(todoId: Int): LiveData<Todo> {
+    fun getTodo(): LiveData<Todo> {
         return todoService.getTodoById(todoId)
     }
 
@@ -21,12 +22,10 @@ class EditTodoViewModel(private val todoService: RemoteTodoService) : ViewModel(
 }
 
 
-class EditTodoViewModelFactory(val todoDao: TodoDao) : ViewModelProvider.Factory {
+class EditTodoViewModelFactory @Inject constructor(val remoteTodoService: RemoteTodoService, val todoId: Int) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(EditTodoViewModel::class.java)) {
-            return EditTodoViewModel(
-                RemoteTodoService.getInstance(todoDao) // it is creating a new class, meanining new data!!
-            ) as T
+            return EditTodoViewModel(remoteTodoService, todoId = todoId) as T
         }
         throw RuntimeException("${modelClass.canonicalName} is not assignable from " +
                 "${EditTodoViewModel::class.java.canonicalName}")

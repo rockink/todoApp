@@ -5,6 +5,7 @@ import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import javax.inject.Inject
 
 
 @JsonClass(generateAdapter = true)
@@ -25,8 +26,7 @@ data class User(
     }
  */
 
-class UserService {
-    private val okHttpClient = OkHttpClient()
+class UserService @Inject constructor(private val okHttpClient: OkHttpClient) {
     private val url = "https://jsonplaceholder.typicode.com/users"
 
     private val moshi = Moshi.Builder().build()
