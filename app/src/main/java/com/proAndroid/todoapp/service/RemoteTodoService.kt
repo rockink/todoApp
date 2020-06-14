@@ -32,8 +32,11 @@ data class JsonPlaceHolderTodo(
     }
     ]
  */
-
-class RemoteTodoService private constructor(private val userService: UserService, private val todoDao: TodoDao) {
+class RemoteTodoService @Inject constructor(
+    private val userService: UserService,
+    private val todoDao: TodoDao,
+    private val okHttpClient: OkHttpClient
+    ) {
 
     private val _todoDisplayListLiveData = Transformations.map(todoDao.getAllTodoLiveData()) {
         it.map { it.mapToTodo() }
