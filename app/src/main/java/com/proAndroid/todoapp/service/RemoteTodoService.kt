@@ -12,6 +12,7 @@ import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import javax.inject.Inject
 
 @JsonClass(generateAdapter = true)
 data class JsonPlaceHolderTodo(
@@ -33,13 +34,16 @@ data class JsonPlaceHolderTodo(
     ]
  */
 
-class RemoteTodoService private constructor(private val userService: UserService, private val todoDao: TodoDao) {
+class RemoteTodoService @Inject constructor(
+    private val userService: UserService,
+    private val todoDao: TodoDao,
+    private val okHttpClient: OkHttpClient
+    ) {
 
     private val _todoDisplayListLiveData = Transformations.map(todoDao.getAllTodoLiveData()) {
         it.map { it.mapToTodo() }
     }
 
-    private val okHttpClient = OkHttpClient()
     private val url = "https://jsonplaceholder.typicode.com/todos"
 
     private val moshi = Moshi.Builder().build()
@@ -109,14 +113,5 @@ class RemoteTodoService private constructor(private val userService: UserService
                 .take(2)
                 .map { urlTemplate.format(it) }
         }
-
-        private var INSTANCE : RemoteTodoService? = null
-
-        fun getInstance(todoDao: TodoDao) : RemoteTodoService {
-            if (INSTANCE == null)
-                INSTANCE = RemoteTodoService(UserService(), todoDao)
-            return INSTANCE!!
-        }
-
     }
 }
