@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.proAndroid.todoapp.R
 import com.proAndroid.todoapp.TodoApplication
+import com.proAndroid.todoapp.asTodoApplication
 import com.proAndroid.todoapp.service.RemoteTodoService
 import com.proAndroid.todoapp.ui.models.Todo
 import com.proAndroid.todoapp.ui.todoDisplay.TodoViewModel
@@ -20,9 +21,9 @@ import kotlinx.coroutines.launch
 
 class TodoAddFragment : Fragment() {
 
-    private val todoViewModel by activityViewModels<TodoViewModel> { TodoViewModelFactory(
-        (requireActivity().application as TodoApplication).db.todoDao()
-    ) }
+    private val todoViewModel by activityViewModels<TodoViewModel> {
+        requireActivity().application.asTodoApplication().appComponent.todoViewModelFactory()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

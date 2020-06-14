@@ -33,7 +33,11 @@ class AppModule {
 @Component(modules = [AppModule::class])
 @Singleton
 interface AppComponent {
+    fun userService() : UserService
+    fun todoService(): RemoteTodoService
+    fun remoteTodoService(): RemoteTodoService
     fun todoViewModelFactory() : TodoViewModelFactory
+
     fun editTodoComponentBuilder(): EditTodoComponent.Builder
 
     @Component.Builder
