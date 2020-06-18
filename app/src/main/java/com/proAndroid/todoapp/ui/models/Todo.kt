@@ -1,6 +1,5 @@
 package com.proAndroid.todoapp.ui.models
 
-import androidx.annotation.DrawableRes
 import com.proAndroid.todoapp.db.DbTodo
 
 data class Todo(

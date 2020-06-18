@@ -17,7 +17,7 @@ import com.proAndroid.todoapp.asTodoApplication
 /**
  * A fragment representing a list of Items.
  */
-class PhotoGalleryFragment : Fragment(), PhotoRecyclerViewAdapter.InteractionListener {
+open class PhotoGalleryFragment : Fragment(), PhotoRecyclerViewAdapter.InteractionListener {
 
     private lateinit var mAdapter: PhotoRecyclerViewAdapter
     private var columnCount = 3

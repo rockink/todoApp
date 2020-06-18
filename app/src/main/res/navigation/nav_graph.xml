@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_todoDisplayFragment_to_photoGalleryFragment"
             app:destination="@id/photoGalleryFragment" />
+        <action
+            android:id="@+id/action_todoDisplayFragment_to_todoPhotoSelectFragment"
+            app:destination="@id/todoPhotoSelectFragment" />
     </fragment>
     <fragment
         android:id="@+id/todoAddFragment"
@@ -44,4 +47,8 @@
         android:name="com.proAndroid.todoapp.ui.photoGallery.PhotoGalleryFragment"
         android:label="fragment_photo_gallery_list"
         tools:layout="@layout/fragment_photo_gallery_list" />
+    <fragment
+        android:id="@+id/todoPhotoSelectFragment"
+        android:name="com.proAndroid.todoapp.ui.todoPhotoSelection.TodoPhotoSelectFragment"
+        android:label="TodoPhotoSelectFragment" />
 </navigation>

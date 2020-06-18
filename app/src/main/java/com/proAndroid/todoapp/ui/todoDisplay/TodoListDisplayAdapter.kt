@@ -9,6 +9,7 @@ import com.bumptech.glide.RequestManager
 import com.proAndroid.todoapp.R
 import com.proAndroid.todoapp.ui.editTodo.EditTodoFragment
 import com.proAndroid.todoapp.ui.models.Todo
+import com.proAndroid.todoapp.ui.todoPhotoSelection.TodoPhotoSelectFragment
 import kotlinx.android.synthetic.main.todo_layout.view.*
 
 class TodoListDisplayAdapter(
@@ -41,7 +42,8 @@ class TodoListDisplayAdapter(
 
             itemView.changeButton.setOnClickListener {
                 navController.navigate(
-                    R.id.action_todoDisplayFragment_to_photoGalleryFragment
+                    R.id.action_todoDisplayFragment_to_todoPhotoSelectFragment,
+                    TodoPhotoSelectFragment.bundalize(todo.id)
                 )
             }
         }
