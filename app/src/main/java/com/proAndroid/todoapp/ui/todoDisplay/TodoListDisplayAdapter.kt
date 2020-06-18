@@ -26,26 +26,6 @@ class TodoListDisplayAdapter(
                 .load(todo.imageResource)
                 .into(itemView.todoImage)
 
-            val imageResources = todo.imageResourceOnline
-                .map { glide.load(it) }
-                .also {requests ->
-                    val requests = requests.map { it.clone().circleCrop() }
-                    requests[0].into(itemView.todoImage1)
-                    requests[1].into(itemView.todoImage2)
-                }
-
-            itemView.todoImage1.setOnClickListener {
-                imageResources[0]
-                    .centerCrop()
-                    .into(itemView.todoImage)
-            }
-
-            itemView.todoImage2.setOnClickListener {
-                imageResources[1]
-                    .centerCrop()
-                    .into(itemView.todoImage)
-            }
-
             val todoTitleOriginalText = itemView.todoTitle.text
 
             itemView.todoTitle.setOnClickListener {
@@ -57,6 +37,12 @@ class TodoListDisplayAdapter(
 
             itemView.todoImage.setOnClickListener {
                 itemView.todoTitle.text = todoTitleOriginalText
+            }
+
+            itemView.changeButton.setOnClickListener {
+                navController.navigate(
+                    R.id.action_todoDisplayFragment_to_photoGalleryFragment
+                )
             }
         }
     }

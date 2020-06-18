@@ -57,8 +57,7 @@ class RemoteTodoService @Inject constructor(
                     Todo(
                         title = "${it.completed} description",
                         todoListItem =  "${it.title} by ${userService.getUser(it.userId)?.name ?: ""}",
-                        imageResource = R.drawable.programming_image,
-                        imageResourceOnline = getTodoImages(),
+                        imageResource = RemoteTodoService.getTodoImages().first(),
                         id = it.id
                     )
                 }?.map { it.mapToDbTodo().copy(id = null) }

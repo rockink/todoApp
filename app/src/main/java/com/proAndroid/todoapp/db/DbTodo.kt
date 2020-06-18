@@ -10,7 +10,7 @@ import com.proAndroid.todoapp.ui.models.Todo
 data class DbTodo(
     val title: String,
     val todoListItem: String,
-    val imageResource : Int,
+    val imageResource : String,
     @PrimaryKey(autoGenerate = true) val id: Int? = null //cause want to autogenerate
 ) {
     fun mapToTodo(): Todo {
@@ -18,8 +18,7 @@ data class DbTodo(
             title=title,
             id = id!!,
             todoListItem = todoListItem,
-            imageResource = imageResource,
-            imageResourceOnline = RemoteTodoService.getTodoImages() //lets make it random atm
+            imageResource = imageResource
         )
     }
 }

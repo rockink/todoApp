@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_todoDisplayFragment_to_editTodoFragment"
             app:destination="@id/editTodoFragment" />
+        <action
+            android:id="@+id/action_todoDisplayFragment_to_photoGalleryFragment"
+            app:destination="@id/photoGalleryFragment" />
     </fragment>
     <fragment
         android:id="@+id/todoAddFragment"
@@ -36,4 +39,9 @@
             android:id="@+id/action_editTodoFragment_to_todoDisplayFragment"
             app:destination="@id/todoDisplayFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/photoGalleryFragment"
+        android:name="com.proAndroid.todoapp.ui.photoGallery.PhotoGalleryFragment"
+        android:label="fragment_photo_gallery_list"
+        tools:layout="@layout/fragment_photo_gallery_list" />
 </navigation>

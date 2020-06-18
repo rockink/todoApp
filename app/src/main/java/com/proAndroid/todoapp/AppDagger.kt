@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.proAndroid.todoapp.db.TodoDao
 import com.proAndroid.todoapp.db.TodoDatabase
+import com.proAndroid.todoapp.ui.photoGallery.PhotoViewModelFactory
 import com.proAndroid.todoapp.service.RemoteTodoService
 import com.proAndroid.todoapp.service.UserService
 import com.proAndroid.todoapp.ui.editTodo.EditTodoViewModelFactory
@@ -39,6 +40,7 @@ interface AppComponent {
     fun todoViewModelFactory() : TodoViewModelFactory
 
     fun editTodoComponentBuilder(): EditTodoComponent.Builder
+    fun photoViewModelFactory(): PhotoViewModelFactory
 
     @Component.Builder
     interface Builder {

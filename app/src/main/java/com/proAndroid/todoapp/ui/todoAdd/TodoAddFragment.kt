@@ -40,8 +40,7 @@ class TodoAddFragment : Fragment() {
             val todoToAdd = Todo(
                 title = title,
                 todoListItem = todoItem,
-                imageResource = R.drawable.programming_image,
-                imageResourceOnline = RemoteTodoService.getTodoImages(),
+                imageResource = RemoteTodoService.getTodoImages().first(),
                 id = 1
             )
             lifecycleScope.launch(Dispatchers.Default) {// background
