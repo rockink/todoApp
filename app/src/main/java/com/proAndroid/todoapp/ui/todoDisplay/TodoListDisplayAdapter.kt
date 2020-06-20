@@ -9,6 +9,7 @@ import com.bumptech.glide.RequestManager
 import com.proAndroid.todoapp.R
 import com.proAndroid.todoapp.ui.editTodo.EditTodoFragment
 import com.proAndroid.todoapp.ui.models.Todo
+import com.proAndroid.todoapp.ui.todoPhotoSelection.TodoPhotoSelectFragment
 import kotlinx.android.synthetic.main.todo_layout.view.*
 
 class TodoListDisplayAdapter(
@@ -26,26 +27,6 @@ class TodoListDisplayAdapter(
                 .load(todo.imageResource)
                 .into(itemView.todoImage)
 
-            val imageResources = todo.imageResourceOnline
-                .map { glide.load(it) }
-                .also {requests ->
-                    val requests = requests.map { it.clone().circleCrop() }
-                    requests[0].into(itemView.todoImage1)
-                    requests[1].into(itemView.todoImage2)
-                }
-
-            itemView.todoImage1.setOnClickListener {
-                imageResources[0]
-                    .centerCrop()
-                    .into(itemView.todoImage)
-            }
-
-            itemView.todoImage2.setOnClickListener {
-                imageResources[1]
-                    .centerCrop()
-                    .into(itemView.todoImage)
-            }
-
             val todoTitleOriginalText = itemView.todoTitle.text
 
             itemView.todoTitle.setOnClickListener {
@@ -57,6 +38,13 @@ class TodoListDisplayAdapter(
 
             itemView.todoImage.setOnClickListener {
                 itemView.todoTitle.text = todoTitleOriginalText
+            }
+
+            itemView.changeButton.setOnClickListener {
+                navController.navigate(
+                    R.id.action_todoDisplayFragment_to_todoPhotoSelectFragment,
+                    TodoPhotoSelectFragment.bundalize(todo.id)
+                )
             }
         }
     }

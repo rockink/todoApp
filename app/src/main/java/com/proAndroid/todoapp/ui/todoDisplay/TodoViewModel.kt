@@ -12,8 +12,7 @@ import javax.inject.Inject
 val todo = Todo(
     title = "ProgrammingTodo",
     todoListItem = "Expand our todo App",
-    imageResource = R.drawable.programming_image,
-    imageResourceOnline = RemoteTodoService.getTodoImages(),
+    imageResource = RemoteTodoService.getTodoImages().first(),
     id = 1
 )
 
