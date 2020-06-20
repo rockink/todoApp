@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.proAndroid.todoapp.androidService.TodoService
 import androidx.lifecycle.lifecycleScope
 import com.proAndroid.todoapp.notification.AppNotification
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +19,9 @@ class MainActivity : AppCompatActivity() {
         Log.d(this.javaClass.canonicalName, "onCreate called...")
         setContentView(R.layout.main_layout)
 
+        startService(
+            Intent(this, TodoService::class.java)
+        )
         //could be created by notification as well!
         handleNotificationAppStarting(intent)
     }

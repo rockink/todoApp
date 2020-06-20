@@ -101,6 +101,10 @@ class RemoteTodoService @Inject constructor(
         return _todoDisplayListLiveData
     }
 
+    fun getAllTodos(): List<Todo> {
+        return todoDao.getAllTodos().map { it.mapToTodo() }
+    }
+    
     fun deleteFirstTodo() {
         val firstTodo = todoDao.getAllTodos().first()
         todoDao.deleteTodo(firstTodo)
