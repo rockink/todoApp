@@ -101,6 +101,10 @@ class RemoteTodoService @Inject constructor(
         return _todoDisplayListLiveData
     }
 
+    fun getAllTodos(): List<Todo> {
+        return todoDao.getAllTodos().map { it.mapToTodo() }
+    }
+
     companion object {
         fun getTodoImages(): List<String> {
             val urlTemplate = "https://picsum.photos/id/%d/200/300" // d as in integer, decimal
