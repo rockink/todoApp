@@ -104,6 +104,11 @@ class RemoteTodoService @Inject constructor(
     fun getAllTodos(): List<Todo> {
         return todoDao.getAllTodos().map { it.mapToTodo() }
     }
+    
+    fun deleteFirstTodo() {
+        val firstTodo = todoDao.getAllTodos().first()
+        todoDao.deleteTodo(firstTodo)
+    }
 
     companion object {
         fun getTodoImages(): List<String> {
