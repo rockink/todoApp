@@ -28,6 +28,9 @@ class AppModule {
     @Provides
     @Singleton
     fun provideTodoDao(todoDatabase: TodoDatabase): TodoDao = todoDatabase.todoDao()
+
+    @Provides
+    fun provideContentResolver(context: Context) = context.contentResolver
 }
 
 

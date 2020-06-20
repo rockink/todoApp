@@ -1,11 +1,11 @@
-package com.proAndroid.todoapp.service
+package com.proAndroid.todoapp.service.images
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.proAndroid.todoapp.ui.photoGallery.Photo
 import javax.inject.Inject
 
-class ImageService @Inject constructor() {
+class ImageService @Inject constructor(private val imageResolver: ImageResolver) {
     private val photoLiveData = MutableLiveData<List<Photo>>()
     private val photos = getTodoImages()
 
@@ -14,6 +14,8 @@ class ImageService @Inject constructor() {
     }
 
     fun getAllPhotos(): LiveData<List<Photo>> {
+        val allImages = getTodoImages() + imageResolver.getImages()
+        photoLiveData.postValue(allImages)
         return photoLiveData
     }
 
@@ -25,6 +27,10 @@ class ImageService @Inject constructor() {
         return ids
             .map { urlTemplate.format(it) }
             .mapIndexed{index, uri -> Photo(index, uri)}
+    }
+
+    fun reloadImages() {
+        getAllPhotos()
     }
 
 }

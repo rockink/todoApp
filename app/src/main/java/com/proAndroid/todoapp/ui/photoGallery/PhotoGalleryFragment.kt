@@ -1,5 +1,7 @@
 package com.proAndroid.todoapp.ui.photoGallery
 
+import android.Manifest
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
@@ -23,6 +27,8 @@ open class PhotoGalleryFragment : Fragment(), PhotoRecyclerViewAdapter.Interacti
     private var columnCount = 3
     private val TAG = this::class.java.canonicalName
 
+    private val PERMISSION_REQUEST_CODE = 100
+
     private val photoViewModel by viewModels<PhotoViewModel> {
         requireActivity().application.asTodoApplication()
             .appComponent.photoViewModelFactory()
@@ -30,6 +36,15 @@ open class PhotoGalleryFragment : Fragment(), PhotoRecyclerViewAdapter.Interacti
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val hasPermission = ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (hasPermission == PERMISSION_GRANTED) {
+            Log.d(TAG, "onCreate: we have the permission")
+        } else {
+            // request a permission
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_REQUEST_CODE)
+        }
+
         mAdapter = PhotoRecyclerViewAdapter(
             mutableListOf(),
             Glide.with(this),
@@ -59,6 +74,17 @@ open class PhotoGalleryFragment : Fragment(), PhotoRecyclerViewAdapter.Interacti
             .observe(viewLifecycleOwner, Observer {
                 mAdapter.update(it)
             })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            //lets look at the result
+            if (resultCode == PERMISSION_GRANTED) {
+                // we have permission
+                photoViewModel.reloadImages()
+            }
+        }
     }
 
     override fun onClick(photo: Photo) {

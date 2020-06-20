@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.proAndroid.todoapp.R
-import com.proAndroid.todoapp.TodoApplication
 import com.proAndroid.todoapp.asTodoApplication
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
@@ -20,6 +19,7 @@ class TodoDisplayFragment : Fragment() {
     private val todoViewModel by activityViewModels<TodoViewModel> {
         requireActivity().application.asTodoApplication().appComponent.todoViewModelFactory()
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

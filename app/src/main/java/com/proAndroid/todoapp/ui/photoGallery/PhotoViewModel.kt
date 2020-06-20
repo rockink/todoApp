@@ -3,7 +3,7 @@ package com.proAndroid.todoapp.ui.photoGallery
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.proAndroid.todoapp.service.ImageService
+import com.proAndroid.todoapp.service.images.ImageService
 import javax.inject.Inject
 
 data class Photo(
@@ -13,10 +13,12 @@ data class Photo(
 
 
 class PhotoViewModel(private val imageService: ImageService) : ViewModel() {
+    fun reloadImages() {
+        imageService.reloadImages()
+    }
+
     val photos = Transformations.map(imageService.getAllPhotos()) { it }
 }
-
-
 
 
 class PhotoViewModelFactory @Inject constructor(val imageService: ImageService) : ViewModelProvider.Factory {
