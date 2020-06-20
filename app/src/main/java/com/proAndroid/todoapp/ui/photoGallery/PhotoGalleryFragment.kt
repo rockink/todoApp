@@ -76,11 +76,11 @@ open class PhotoGalleryFragment : Fragment(), PhotoRecyclerViewAdapter.Interacti
             })
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
             //lets look at the result
-            if (resultCode == PERMISSION_GRANTED) {
+            if (grantResults[0] == PERMISSION_GRANTED) {
                 // we have permission
                 photoViewModel.reloadImages()
             }
