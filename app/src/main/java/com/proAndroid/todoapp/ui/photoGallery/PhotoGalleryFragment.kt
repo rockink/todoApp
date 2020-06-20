@@ -26,7 +26,6 @@ open class PhotoGalleryFragment : Fragment(), PhotoRecyclerViewAdapter.Interacti
     private lateinit var mAdapter: PhotoRecyclerViewAdapter
     private var columnCount = 3
     private val TAG = this::class.java.canonicalName
-
     private val PERMISSION_REQUEST_CODE = 100
 
     private val photoViewModel by viewModels<PhotoViewModel> {
@@ -42,7 +41,7 @@ open class PhotoGalleryFragment : Fragment(), PhotoRecyclerViewAdapter.Interacti
             Log.d(TAG, "onCreate: we have the permission")
         } else {
             // request a permission
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_REQUEST_CODE)
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_REQUEST_CODE)
         }
 
         mAdapter = PhotoRecyclerViewAdapter(
@@ -79,9 +78,7 @@ open class PhotoGalleryFragment : Fragment(), PhotoRecyclerViewAdapter.Interacti
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            //lets look at the result
             if (grantResults[0] == PERMISSION_GRANTED) {
-                // we have permission
                 photoViewModel.reloadImages()
             }
         }
