@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.proAndroid.todoapp.R
+import com.proAndroid.todoapp.androidService.TodoService
 import com.proAndroid.todoapp.asTodoApplication
 import com.proAndroid.todoapp.notification.AppNotification
 import kotlinx.android.synthetic.main.activity_main.*
@@ -43,8 +44,18 @@ class TodoDisplayFragment : Fragment() {
                 todoRecyclerAdapter.updateListWithItem(todoList)
 
                 view.notifyButton.setOnClickListener {
-                    AppNotification(NotificationManagerCompat.from(requireContext()), requireContext())
-                        .notifyTodosSelected(todoList)
+                    val serviceBinder =
+                        requireActivity().application.asTodoApplication().serviceBinder
+
+                    serviceBinder.observe(
+                        viewLifecycleOwner,
+                        object : Observer<TodoService.TodoServiceBinder> {
+                            override fun onChanged(t: TodoService.TodoServiceBinder?) {
+                                t?.sendNotification()
+                                serviceBinder.removeObserver(this)
+                            }
+
+                        })
                 }
             })
 
