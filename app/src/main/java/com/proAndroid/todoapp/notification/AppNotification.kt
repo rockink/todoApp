@@ -21,6 +21,7 @@ import com.proAndroid.todoapp.ui.models.Todo
  */
 class AppNotification(private val notificationManager: NotificationManagerCompat, private val context: Context) {
 
+    val NOTIFICATION_ID = 1
     // constants
     object Actions {
         val NOTIFICATION_ID = 1
