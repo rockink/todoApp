@@ -50,7 +50,7 @@
         android:name="com.proAndroid.todoapp.ui.photoGallery.PhotoGalleryFragment"
         android:label="fragment_photo_gallery_list"
         tools:layout="@layout/fragment_photo_gallery_list" />
-    <fragment
+    <dialog
         android:id="@+id/todoPhotoSelectFragment"
         android:name="com.proAndroid.todoapp.ui.todoPhotoSelection.TodoPhotoSelectFragment"
         android:label="TodoPhotoSelectFragment" />
