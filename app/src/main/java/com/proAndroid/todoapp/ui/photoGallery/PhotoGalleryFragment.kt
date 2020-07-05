@@ -15,13 +15,14 @@ import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.proAndroid.todoapp.R
 import com.proAndroid.todoapp.asTodoApplication
 
 /**
  * A fragment representing a list of Items.
  */
-open class PhotoGalleryFragment : Fragment(), PhotoRecyclerViewAdapter.InteractionListener {
+open class PhotoGalleryFragment : BottomSheetDialogFragment(), PhotoRecyclerViewAdapter.InteractionListener {
 
     private lateinit var mAdapter: PhotoRecyclerViewAdapter
     private var columnCount = 3
