@@ -65,6 +65,11 @@ class TodoDisplayFragment : Fragment() {
                 .navigate(R.id.action_todoDisplayFragment_to_todoAddFragment)
         }
 
+        addTodoButton.setOnClickListener {
+            findNavController()
+                .navigate(R.id.action_todoDisplayFragment_to_todoAddFragment)
+        }
+
     }
 
     companion object {

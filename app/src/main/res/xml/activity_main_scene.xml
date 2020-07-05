@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+z    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="1000">
+       <KeyFrameSet>
+       </KeyFrameSet>
+        <OnSwipe motion:touchAnchorId="@+id/todoRecyclerView" />
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/appTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginStart="16dp"
+            motion:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="16dp"
+            motion:layout_constraintStart_toStartOf="@+id/todoRecyclerView"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
+        <Constraint
+            android:id="@+id/notifyButton"
+            motion:layout_constraintEnd_toStartOf="@+id/addButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toTopOf="@+id/todoRecyclerView"
+            android:layout_marginEnd="12dp"
+            motion:layout_constraintTop_toTopOf="parent"
+            android:layout_marginRight="12dp"
+            android:visibility="gone" />
+        <Constraint
+            android:id="@+id/addButton"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            motion:layout_constraintBottom_toTopOf="@+id/todoRecyclerView"
+            android:layout_marginEnd="24dp"
+            motion:layout_constraintTop_toTopOf="@+id/appTitle"
+            android:layout_marginRight="24dp"
+            android:visibility="gone" />
+        <Constraint
+            android:id="@+id/addTodoButton"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="16dp"
+            android:visibility="visible"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp" />
+    </ConstraintSet>
+</MotionScene>
