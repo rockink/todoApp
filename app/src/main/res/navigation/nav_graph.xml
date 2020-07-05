@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_todoDisplayFragment_to_todoPhotoSelectFragment"
             app:destination="@id/todoPhotoSelectFragment" />
+        <action
+            android:id="@+id/action_todoDisplayFragment_to_deleteConfirmationDialogFragment"
+            app:destination="@id/deleteConfirmationDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/todoAddFragment"
@@ -51,4 +54,9 @@
         android:id="@+id/todoPhotoSelectFragment"
         android:name="com.proAndroid.todoapp.ui.todoPhotoSelection.TodoPhotoSelectFragment"
         android:label="TodoPhotoSelectFragment" />
+    <dialog
+        android:id="@+id/deleteConfirmationDialogFragment"
+        android:name="com.proAndroid.todoapp.ui.todoDisplay.deleteDialog.DeleteConfirmationDialogFragment"
+        android:label="fragment_delete_confirmation_dialog"
+        tools:layout="@layout/fragment_delete_confirmation_dialog" />
 </navigation>

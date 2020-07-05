@@ -9,6 +9,7 @@ import com.bumptech.glide.RequestManager
 import com.proAndroid.todoapp.R
 import com.proAndroid.todoapp.ui.editTodo.EditTodoFragment
 import com.proAndroid.todoapp.ui.models.Todo
+import com.proAndroid.todoapp.ui.todoDisplay.deleteDialog.DeleteConfirmationDialogFragment
 import com.proAndroid.todoapp.ui.todoPhotoSelection.TodoPhotoSelectFragment
 import kotlinx.android.synthetic.main.todo_layout.view.*
 
@@ -44,6 +45,14 @@ class TodoListDisplayAdapter(
                 navController.navigate(
                     R.id.action_todoDisplayFragment_to_todoPhotoSelectFragment,
                     TodoPhotoSelectFragment.bundalize(todo.id)
+                )
+            }
+
+            itemView.deleteButton.setOnClickListener {
+                //show yes or no dialog
+                navController.navigate(
+                    R.id.action_todoDisplayFragment_to_deleteConfirmationDialogFragment,
+                    DeleteConfirmationDialogFragment.bundalize(todo.id)
                 )
             }
         }

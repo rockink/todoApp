@@ -51,4 +51,7 @@ interface TodoDao {
     @Delete
     fun deleteTodo(firstTodo: DbTodo)
 
+    @Query("DELETE FROM TODO where id=:id")
+    abstract fun deleteTodoById(id: Int)
+
 }

@@ -110,6 +110,10 @@ class RemoteTodoService @Inject constructor(
         todoDao.deleteTodo(firstTodo)
     }
 
+    fun deleteTodo(id: Int) {
+        todoDao.deleteTodoById(id)
+    }
+
     companion object {
         fun getTodoImages(): List<String> {
             val urlTemplate = "https://picsum.photos/id/%d/200/300" // d as in integer, decimal
