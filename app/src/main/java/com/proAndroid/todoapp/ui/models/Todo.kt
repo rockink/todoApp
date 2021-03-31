@@ -5,7 +5,7 @@ import com.proAndroid.todoapp.db.DbTodo
 data class Todo(
     val title: String,
     val todoListItem: String,
-    val imageResource : String,
+    val imageResource : String  = "",
     val id: Int
 ) {
     fun mapToDbTodo(): DbTodo {

@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.NotificationManagerCompat
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -14,7 +16,8 @@ import com.bumptech.glide.Glide
 import com.proAndroid.todoapp.R
 import com.proAndroid.todoapp.androidService.TodoService
 import com.proAndroid.todoapp.asTodoApplication
-import com.proAndroid.todoapp.notification.AppNotification
+import com.proAndroid.todoapp.ui.editTodo.EditTodoFragment
+import com.proAndroid.todoapp.ui.models.Todo
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 
@@ -23,55 +26,31 @@ class TodoDisplayFragment : Fragment() {
         requireActivity().application.asTodoApplication().appComponent.todoViewModelFactory()
     }
 
-
+    // todoViewModel defined in the fragment
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.activity_main, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val todoRecyclerAdapter =
-            TodoListDisplayAdapter(mutableListOf(), Glide.with(this), findNavController())
-        view.todoRecyclerView.adapter = todoRecyclerAdapter
-        view.todoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        todoViewModel.todoLiveData
-            .observe(viewLifecycleOwner, Observer { todoList ->
-                todoRecyclerAdapter.updateListWithItem(todoList)
-
-                view.notifyButton.setOnClickListener {
-                    val serviceBinder =
-                        requireActivity().application.asTodoApplication().serviceBinder
-
-                    serviceBinder.observe(
-                        viewLifecycleOwner,
-                        object : Observer<TodoService.TodoServiceBinder> {
-                            override fun onChanged(t: TodoService.TodoServiceBinder?) {
-                                t?.sendNotification()
-                                serviceBinder.removeObserver(this)
+        return ComposeView(requireContext()).apply {
+            setContent {
+                MaterialTheme {
+                    Surface {
+                        TodoDisplayList(
+                            todoViewModel = todoViewModel,
+                            //**** Lets define some action here.
+                            onTodoCardClick = {
+                                findNavController().navigate(
+                                    R.id.action_todoDisplayFragment_to_editTodoFragment,
+                                    EditTodoFragment.bundalize(todo.id)
+                                )
                             }
-
-                        })
+                        )
+                    }
                 }
-            })
-
-        addButton.setOnClickListener {
-            // go to the todoAddFragment
-            findNavController()
-                .navigate(R.id.action_todoDisplayFragment_to_todoAddFragment)
+            }
         }
-
-        addTodoButton.setOnClickListener {
-            findNavController()
-                .navigate(R.id.action_todoDisplayFragment_to_todoAddFragment)
-        }
-
     }
-
+    
     companion object {
         @JvmStatic
         fun newInstance() =
